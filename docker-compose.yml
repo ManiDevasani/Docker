@@ -1,38 +1,43 @@
 version: '3'
 services:
-  database:
+
+  db:
     image: postgres:latest 
-    hostname: database
-    container_name: database
+    hostname: db
+    container_name: db
+    ports:
+    - "5432:5432"
     environment:
       POSTGRES_USER: manidevasani
       POSTGRES_PASSWORD: Manikanta
-      POSTGRES_DB: chatapp-project
+      POSTGRES_DB: chatapp
     networks:
     - network
 
 
-  chatproject:
+  chatapp:
     build:
-      context: /home/ubuntu/
+      context: /home/ubuntu/Docker/
+    ports:
+    - "80:8000"
     hostname: chatproject
     container_name: chatproject
     networks:
     - network
     depends_on: 
-    - database
+    - db
 
 
-  server:
+  nginx:
     build:
-      context: server/
+      context: /home/ubuntu/Docker/nginx/
     ports:
-    - "80:80"
-    hostname: server
+    - "8000:80"
+    hostname: nginx
     networks:
     - network
     depends_on:
-    - chatproject
+    - chatapp
 
 
 networks:
