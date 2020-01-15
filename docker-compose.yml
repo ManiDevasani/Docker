@@ -1,6 +1,6 @@
 version: '3'
-services:
 
+services:
   db:
     image: postgres:latest 
     hostname: db
@@ -13,7 +13,10 @@ services:
       POSTGRES_DB: chatapp
     networks:
     - network
-
+    restart: always
+    volumes:
+    - "database:/var/lib/postgresql/data"
+    
 
   chatapp:
     build:
@@ -26,7 +29,7 @@ services:
     - network
     depends_on: 
     - db
-
+    restart: always
 
   nginx:
     build:
@@ -38,8 +41,11 @@ services:
     - network
     depends_on:
     - chatapp
-
+    restart: always
 
 networks:
   network:
     driver: bridge  
+
+volumes:
+  database:
